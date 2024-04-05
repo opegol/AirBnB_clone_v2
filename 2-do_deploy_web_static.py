@@ -4,7 +4,8 @@
 from fabric.api import run, env, put
 import os.path
 
-env.hosts = ['54.159.27.57', '3.89.155.109']
+env.hosts = ['3.89.155.109']
+# env.hosts = ['54.159.27.57', '3.89.155.109']
 
 
 def do_deploy(archive_path):
@@ -16,11 +17,12 @@ def do_deploy(archive_path):
         False, if file does not exist at archive_path or
         if an error occurs and True, Otherwise.
     """
+
     if os.path.isfile(archive_path) is False:
         return False
     file = archive_path.split("/")[-1]
     n = file.split(".")[0]
-
+    print(file)
     if put(archive_path, f"/tmp/{file}").failed is True:
         return False
     if run(f"rm -rf /data/web_static/releases/{n}/").failed is True:
@@ -33,7 +35,7 @@ def do_deploy(archive_path):
     if run("rm /tmp/{file}").failed is True:
         return False
     if run(f"mv /data/web_static/releases/{n}/web_static/* \
-            /data/web_static/releases/{n}/").failed is True:
+        /data/web_static/releases/{n}/").failed is True:
         return False
     if run(f"rm -rf /data/web_static/releases/{n}/web_static").failed is True:
         return False
