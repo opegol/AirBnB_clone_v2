@@ -27,7 +27,8 @@ class FileStorage:
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+        if obj.id:
+            self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
@@ -68,3 +69,8 @@ class FileStorage:
         s_obj = self.all()
         if obj and obj in s_obj.values():
             del s_obj[(obj.to_dict()['__class__'] + '.' + obj.id)]
+
+    # New-from Flask project
+    def close(self):
+        """call reload method"""
+        self.reload()
